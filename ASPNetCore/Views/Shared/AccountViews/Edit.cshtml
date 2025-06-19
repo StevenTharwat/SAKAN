@@ -1,0 +1,82 @@
+﻿@model AccountViewModel
+
+@{
+    var controllerName = ViewContext.RouteData.Values["controller"]?.ToString();
+    string Discriminator = "";
+    string DiscriminatorAl = "";
+    string DiscriminatorPlural = "";
+    string DiscriminatorPluralAl = "";
+    if (controllerName == "Accounts")
+    {
+        Discriminator = ArabicWords.AccountDiscriminator;
+        DiscriminatorPlural = ArabicWords.AccountDiscriminatorPlural;
+        DiscriminatorAl = ArabicWords.AccountDiscriminatorAl;
+        DiscriminatorPluralAl = ArabicWords.AccountDiscriminatorPluralAl;
+    }
+    else if (controllerName == "Departments")
+    {
+        Discriminator = ArabicWords.DepartmentDiscriminator;
+        DiscriminatorPlural = ArabicWords.DepartmentDiscriminatorPlural;
+        DiscriminatorAl = ArabicWords.DepartmentDiscriminatorAl;
+        DiscriminatorPluralAl = ArabicWords.DepartmentDiscriminatorPluralAl;
+    }
+    ViewBag.DiscriminatorPlura = DiscriminatorPlural;
+    ViewBag.controllerName = controllerName;
+    ViewData["Title"] = $"تعديل {DiscriminatorPluralAl}";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary">تعديل @DiscriminatorAl @Model?.Name</h2>
+            <p class="text-muted mb-0">أدخل معلومات @DiscriminatorAl الأساسية</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-right me-2"></i>العودة للقائمة
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-light py-3">
+            <h5 class="card-title mb-0 text-secondary">
+                <i class="fas fa-info-circle me-2"></i>معلومات @DiscriminatorAl
+            </h5>
+        </div>
+        <div class="card-body">
+        <form asp-action="Edit">
+            <partial name="AccountViews/_AccountEditPartial" model="@Model" />
+        </form>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Enable Bootstrap validation
+        (function () {
+            'use strict'
+
+            var forms = document.querySelectorAll('.needs-validation')
+
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+}

@@ -1,0 +1,528 @@
+﻿@{
+    ViewData["Title"] = "نظام إدارة المباني";
+}
+    <title></title>
+
+
+<body>
+    
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="floating-elements"></div>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="hero-title">مرحباً بكم في سكن</h1>
+                        <p class="hero-subtitle">
+                            نظام متكامل لإدارة المباني والسكان بكفاءة عالية وسهولة في الاستخدام.
+                            نوفر لكم حلول ذكية لإدارة العقارات والتواصل مع السكان وتتبع جميع العمليات.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a asp-controller="Accounts" asp-action="Index" class="btn btn-custom btn-primary-custom">
+                                <i class="fas fa-building me-2"></i>
+                                استعراض الحسابت
+                            </a>
+                            <a asp-controller="Home" asp-action="About" class="btn btn-custom btn-outline-custom">
+                                <i class="fas fa-info-circle me-2"></i>
+                                المزيد عن النظام
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-5" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card text-center">
+                        <div class="stats-icon mx-auto" style="background: linear-gradient(45deg, #3498db, #2980b9);">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stats-number">245</div>
+                        <div class="stats-label">إجمالي المباني</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card text-center">
+                        <div class="stats-icon mx-auto" style="background: linear-gradient(45deg, #27ae60, #219a52);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stats-number">1,847</div>
+                        <div class="stats-label">عدد السكان</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card text-center">
+                        <div class="stats-icon mx-auto" style="background: linear-gradient(45deg, #f39c12, #d68910);">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="stats-number">892</div>
+                        <div class="stats-label">الوحدات السكنية</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card text-center">
+                        <div class="stats-icon mx-auto" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stats-number">98%</div>
+                        <div class="stats-label">معدل الإشغال</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="section-title">ميزات النظام</h2>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #3498db, #2980b9);">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <h3 class="feature-title">إدارة المباني</h3>
+                        <p class="feature-description">
+                            إدارة شاملة لجميع المباني والوحدات السكنية مع تتبع تفصيلي لكل وحدة ومعلومات السكان
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #27ae60, #219a52);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3 class="feature-title">إدارة السكان</h3>
+                        <p class="feature-description">
+                            نظام متطور لإدارة بيانات السكان والمستأجرين مع إمكانية التواصل المباشر وتتبع الطلبات
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #f39c12, #d68910);">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3 class="feature-title">التقارير والإحصائيات</h3>
+                        <p class="feature-description">
+                            تقارير مفصلة وإحصائيات دقيقة تساعدك في اتخاذ القرارات الصحيحة لإدارة العقارات
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #e74c3c, #c0392b);">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3 class="feature-title">نظام الإشعارات</h3>
+                        <p class="feature-description">
+                            إشعارات فورية للأحداث المهمة والتذكيرات والرسائل من وإلى السكان والإدارة
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #9b59b6, #8e44ad);">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h3 class="feature-title">واجهة متجاوبة</h3>
+                        <p class="feature-description">
+                            تصميم متجاوب يعمل على جميع الأجهزة من الحاسوب إلى الهاتف المحمول بسلاسة تامة
+                        </p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #1abc9c, #16a085);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">الأمان والحماية</h3>
+                        <p class="feature-description">
+                            أعلى مستويات الأمان لحماية البيانات مع نظام صلاحيات متقدم وتشفير قوي للمعلومات
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="cta-title">ابدأ رحلتك مع سكن اليوم</h2>
+                    <p class="cta-subtitle">
+                        انضم إلى آلاف المستخدمين الذين يعتمدون على سكن لإدارة عقاراتهم بكفاءة ونجاح
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-custom btn-outline-custom">
+                            <i class="fas fa-user-plus me-2"></i>
+                            إنشاء حساب جديد
+                        </a>
+                        <a asp-controller="Home" asp-action="Demo" class="btn btn-custom btn-primary-custom">
+                            <i class="fas fa-play me-2"></i>
+                            مشاهدة العرض التوضيحي
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @section Scripts{
+
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stats-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+                const increment = target / 100;
+                let current = 0;
+
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = counter.textContent.includes('%') ? target + '%' : target.toLocaleString('ar');
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current).toLocaleString('ar');
+                    }
+                }, 20);
+            });
+        }
+
+        // Trigger counter animation when section is visible
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const statsSection = document.querySelector('.stats-card').closest('section');
+            observer.observe(statsSection);
+        });
+    </script>
+    }
+
+</body>
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .hero-section {
+        background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(52, 152, 219, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff" fill-opacity="0.1" points="0,1000 1000,0 1000,1000"/></svg>');
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        z-index: 2;
+        position: relative;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.3rem;
+        color: rgba(255,255,255,0.9);
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+
+    .stats-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+    .stats-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    .stats-label {
+        color: #7f8c8d;
+        font-weight: 500;
+    }
+
+    .feature-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2.5rem;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+    @@keyframes shimmer {
+        0%
+
+    {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    }
+
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        margin: 0 auto 1.5rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .feature-description {
+        color: #7f8c8d;
+        line-height: 1.6;
+        position: relative;
+        z-index: 2;
+    }
+
+    .cta-section {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        padding: 4rem 0;
+        color: white;
+        text-align: center;
+    }
+
+    .cta-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .cta-subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .btn-custom {
+        padding: 1rem 2.5rem;
+        font-weight: 600;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+        border: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-primary-custom {
+        background: linear-gradient(45deg, var(--secondary-color), var(--success-color));
+        color: white;
+    }
+
+        .btn-primary-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+        }
+
+    .btn-outline-custom {
+        border: 2px solid white;
+        color: white;
+        background: transparent;
+    }
+
+        .btn-outline-custom:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: var(--primary-color);
+        position: relative;
+    }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-color), var(--success-color));
+            border-radius: 2px;
+        }
+
+    .floating-elements {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        z-index: 1;
+    }
+
+        .floating-elements::before,
+        .floating-elements::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-elements::before {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            right: 10%;
+            animation-delay: 0s;
+        }
+
+        .floating-elements::after {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 80%;
+            animation-delay: 3s;
+        }
+
+    @@keyframes float {
+        0%, 100%
+
+    {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(180deg);
+    }
+
+    }
+</style>
