@@ -1,41 +1,72 @@
-﻿@model IEnumerable<AccountViewModel>
+﻿@model IEnumerable<Account>
 
 @{
-    ViewData["Title"] = $"ال{Model.FirstOrDefault()?.Type}ات";
+    
+    string Discriminator = ArabicWords.AccountDiscriminator;
+    string DiscriminatorPlural = ArabicWords.AccountDiscriminatorPlural;
+    string DiscriminatorAl = ArabicWords.AccountDiscriminatorAl;
+    string DiscriminatorPluralAl = ArabicWords.AccountDiscriminatorPluralAl;
+    
+    ViewBag.DiscriminatorPlura = DiscriminatorPlural;
+    ViewData["Title"] = $"ال{DiscriminatorPlural}";
 }
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary">قائمة الحسابات</h2>
+        <h2 class="fw-bold text-primary">قائمة @DiscriminatorPluralAl</h2>
         <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>إضافة حساب جديد
+            <i class="fas fa-plus me-2"></i> إضافة @Discriminator 
         </a>
+    </div>
+
+    @* Account Type Filter *@
+    <div class="dropdown mb-3">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="accountTypeFilter"
+                data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-filter me-2"></i> تصفية حسب نوع الحساب
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="accountTypeFilter">
+            <li><a class="dropdown-item filter-option active" data-type="all" data-display-name="all">الكل</a></li>
+            <li><hr class="dropdown-divider"></li>
+            @foreach (var type in Enum.GetValues(typeof(AccountType)))
+            {
+                <li>
+                    <a class="dropdown-item filter-option" data-type="@type" data-display-name="@(( (AccountType) type ).GetDisplayName())">
+                        @(( (AccountType) type ).GetDisplayName())
+                    </a>
+                </li>
+            }
+        </ul>
     </div>
 
     <div class="card shadow-sm">
         <div class="card-header bg-light py-3">
-            <h5 class="card-title mb-0 text-secondary">جميع الحسابات المسجلة</h5>
+            <h5 class="card-title mb-0 text-secondary">جميع @DiscriminatorPluralAl المسجلة</h5>
         </div>
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="table-responsive text-center">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="text-nowrap">@Html.DisplayNameFor(a=>a.SerialNumber)</th>
+                            <th class="text-nowrap">@Html.DisplayNameFor(a => a.SerialNumber)</th>
                             <th class="text-nowrap">@Html.DisplayNameFor(a => a.Name)</th>
                             <th class="text-nowrap">@Html.DisplayNameFor(a => a.Address)</th>
                             <th class="text-nowrap">@Html.DisplayNameFor(a => a.CreatedAt)</th>
+                            <th class="text-nowrap">صافي المبلغ</th>
+                            <th class="text-nowrap">@Html.DisplayNameFor(a => a.Type)</th>
                             <th class="text-nowrap text-center">الإجراءات</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
-                            <tr>
+                            <tr data-type-display-name="@item.Type.GetDisplayName()">
                                 <td>@item.SerialNumber</td>
                                 <td class="fw-bold">@item.Name</td>
                                 <td>@item.Address</td>
                                 <td>@item.CreatedAt.ToString("yyyy/MM/dd")</td>
+                                <td>@(item.Credit - item.Debit)</td>
+                                <td>@item.Type.GetDisplayName()</td>
                                 <td>
                                     <div class="d-flex justify-content-center gap-2">
                                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="تعديل">
@@ -46,6 +77,9 @@
                                         </a>
                                         <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="حذف">
                                             <i class="fas fa-trash-alt"></i>
+                                        </a>
+                                        <a asp-controller="Receipts" asp-action="Create" asp-route-AccountId="@item.Id" class="btn btn-sm btn-outline-success" title="اضافة حركة">
+                                            <i class="fas fa-money-bill-wave"></i>
                                         </a>
                                     </div>
                                 </td>
@@ -59,13 +93,72 @@
         {
             <div class="card-footer text-center py-4 text-muted">
                 <i class="fas fa-database fa-2x mb-3"></i>
-                <p class="mb-0">لا توجد حسابات مسجلة حالياً</p>
+                <p class="mb-0">لا توجد @ViewBag.DiscriminatorPlura مسجلة حالياً</p>
             </div>
         }
     </div>
 </div>
-<style>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Filter functionality
+            $('.filter-option').on('click', function(e) {
+                e.preventDefault();
 
+                // Update active state in UI
+                $('.filter-option').removeClass('active');
+                $(this).addClass('active');
+
+                // Update dropdown button text
+                $('#accountTypeFilter').html('<i class="fas fa-filter me-2"></i> ' + $(this).text());
+
+                // Get filter criteria
+                const filterType = $(this).data('type');
+                const displayName = $(this).data('display-name');
+                const $rows = $('tbody tr');
+
+                // Show loading state
+                $rows.addClass('opacity-50');
+
+                // Filter after short delay for better UX
+                setTimeout(() => {
+                    if (filterType === 'all') {
+                        $rows.show();
+                    } else {
+                        $rows.each(function() {
+                            const rowDisplayName = $(this).find('td:nth-child(5)').text().trim();
+                            $(this).toggle(rowDisplayName === displayName);
+                        });
+                    }
+
+                    // Remove loading state
+                    $rows.removeClass('opacity-50');
+                }, 100);
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    .dropdown-menu{
+        inset:unset!important;
+        margin: unset !important;
+        transform: unset !important;
+    }
     /* Cards */
     .card {
         border: none;
@@ -92,6 +185,7 @@
             border-bottom: 2px solid var(--light-color);
             font-weight: 600;
             text-transform: capitalize;
+            text-align-last: center;
         }
 
     .table-hover tbody tr:hover {
@@ -136,21 +230,57 @@
 
     /* Responsive adjustments */
     @@media (max-width: 768px) {
-        .table-responsive
+        .table-responsive {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
 
-    {
-        border: 1px solid #dee2e6;
-        border-radius: 6px;
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+            .dropdown {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
     }
 
-    .d-flex.justify-content-between {
-        flex-direction: column;
-        gap: 1rem;
-    }
+        /* Filter Dropdown Styles */
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
 
-    .btn {
-        width: 100%;
-    }
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            margin: 2px 5px;
+            width: auto;
+        }
 
-    }
+            .dropdown-item:hover, .dropdown-item.active {
+                background-color: #f0f7ff;
+                color: #0d6efd;
+            }
+
+        /* Table Animation */
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .opacity-50 {
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Empty state animation */
+        .card-footer {
+            transition: all 0.5s ease;
+        }
 </style>

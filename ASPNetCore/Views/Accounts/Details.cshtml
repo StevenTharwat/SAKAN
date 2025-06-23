@@ -1,146 +1,166 @@
-﻿@model DAL.Domain.Account
+﻿@model Account
 
 @{
-    ViewData["Title"] = "تفاصيل الحساب";
+    string Discriminator = "";
+    string DiscriminatorAl = "";
+    string DiscriminatorPlural = "";
+    string DiscriminatorPluralAl = "";
+    if (Model?.Type == AccountType.Account)
+    {
+        Discriminator = ArabicWords.AccountDiscriminator;
+        DiscriminatorPlural = ArabicWords.AccountDiscriminatorPlural;
+        DiscriminatorAl = ArabicWords.AccountDiscriminatorAl;
+        DiscriminatorPluralAl = ArabicWords.AccountDiscriminatorPluralAl;
+    }
+    else if (Model?.Type == AccountType.Department)
+    {
+        Discriminator = ArabicWords.DepartmentDiscriminator;
+        DiscriminatorPlural = ArabicWords.DepartmentDiscriminatorPlural;
+        DiscriminatorAl = ArabicWords.DepartmentDiscriminatorAl;
+        DiscriminatorPluralAl = ArabicWords.DepartmentDiscriminatorPluralAl;
+    }
+    ViewBag.DiscriminatorPlura = DiscriminatorPlural;
+    ViewData["Title"] = $"تفاصيل {DiscriminatorAl}";
 }
 
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold text-primary">تفاصيل الحساب</h2>
-            <p class="text-muted mb-0">عرض كافة المعلومات الخاصة بالحساب</p>
-        </div>
-        <div>
-            <a asp-action="Index" class="btn btn-outline-secondary me-2">
-                <i class="fas fa-arrow-right me-2"></i>العودة للقائمة
-            </a>
-            <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
-                <i class="fas fa-edit me-2"></i>تعديل
-            </a>
-        </div>
-    </div>
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-light py-3">
-            <h5 class="card-title mb-0 text-secondary">
-                <i class="fas fa-info-circle me-2"></i>المعلومات الأساسية
-            </h5>
-        </div>
-        <div class="card-body">
-            <div class="account-details">
-                <div class="row mb-3">
-                    <div class="col-md-6 detail-item">
-                        <h6>@Html.DisplayNameFor(model => model.SerialNumber)</h6>
-                        <p>@Html.DisplayFor(model => model.SerialNumber)</p>
-                    </div>
-                    <div class="col-md-6 detail-item">
-                        <h6>@Html.DisplayNameFor(model => model.Name)</h6>
-                        <p class="fw-bold">@Html.DisplayFor(model => model.Name)</p>
-                    </div>
-                    <div class="col-md-6 detail-item">
-                        <h6>@Html.DisplayNameFor(model => model.CreatedAt)</h6>
-                        <p>@Model?.CreatedAt.ToString("yyyy/MM/dd")</p>
-                    </div>
-
-                    <div class="col-md-6 detail-item">
-                        <h6>@Html.DisplayNameFor(model => model.Address)</h6>
-                        <p>@Html.DisplayFor(model => model.Address)</p>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">تفاصيل الحساب</h4>
+                        <div>
+                            <a asp-action="Edit" asp-route-id="@Model.SerialNumber" class="btn btn-light btn-sm me-2">
+                                <i class="fas fa-edit"></i> تعديل
+                            </a>
+                            <a asp-action="Index" class="btn btn-light btn-sm">
+                                <i class="fas fa-arrow-right"></i> العودة للقائمة
+                            </a>
+                        </div>
                     </div>
                 </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.SerialNumber)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.SerialNumber)</dd>
 
-                <div class="row">
-                    <div class="col-md-6 detail-item">
-                        <h6>@Html.DisplayNameFor(model => model.Description)</h6>
-                        <p>@Html.DisplayFor(model => model.Description)</p>
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Type)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Type)</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CreatedAt)</dt>
+                                <dd class="col-sm-8">@Model.CreatedAt.ToString("dd/MM/yyyy - hh:mm")</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Credit)</dt>
+                                <dd class="col-sm-8">@Model.Credit.ToString("N2")</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Debit)</dt>
+                                <dd class="col-sm-8">@Model.Debit.ToString("N2")</dd>
+                                
+                                <dt class="col-sm-4">الصافي</dt>
+                                <dd class="col-sm-8">@(( Model.Credit - Model.Debit ).ToString("N2"))</dd>
+
+                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.NumberOfPeople)</dt>
+                                <dd class="col-sm-8">@Html.DisplayFor(model => model.NumberOfPeople)</dd>
+                            </dl>
+                        </div>
                     </div>
-                    <div class="col-md-6 detail-item">
-                        <h6>@Html.DisplayNameFor(model => model.AdditionalInfo)</h6>
-                        <p>@Html.DisplayFor(model => model.AdditionalInfo)</p>
+
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <h5 class="border-bottom pb-2">معلومات إضافية</h5>
+                            <dl class="row">
+                                @if (!string.IsNullOrEmpty(Model.Address))
+                                {
+                                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Address)</dt>
+                                    <dd class="col-sm-10">@Html.DisplayFor(model => model.Address)</dd>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.Description))
+                                {
+                                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Description)</dt>
+                                    <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
+                                }
+
+                                @if (!string.IsNullOrEmpty(Model.AdditionalInfo))
+                                {
+                                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.AdditionalInfo)</dt>
+                                    <dd class="col-sm-10">@Html.DisplayFor(model => model.AdditionalInfo)</dd>
+                                }
+                            </dl>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="receipts"></div>
+
 </div>
 
+<style>
+    /* Details page specific styles */
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-    <style>
-        /* Details Page Styling */
-        .account-details {
-            padding: 1rem;
+    .card-header {
+        font-family: 'Cairo', sans-serif;
+        font-weight: 700;
+    }
+
+    dl.row dt {
+        font-weight: 600;
+        color: #555;
+    }
+
+    dl.row dd {
+        margin-bottom: 0.5rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+        .table th {
+            font-weight: 600;
+            /* background-color: #f8f9fa; */
         }
 
-        .detail-item {
-            margin-bottom: 1.5rem;
-        }
+    .table-responsive {
+        border-radius: 5px;
+        overflow: hidden;
+    }
+</style>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            // Load receipts dynamically
+            $.ajax({
+                url: '@Url.Action("Index", "Receipts")',
+                type: 'GET',
+                data: { accountId: '@Model.Id' },
+                success: function (data) {
+                    $('#receipts').html(data);
+                    // Execute any scripts in the loaded content
+                    $('#receipts script').each(function() {
+                        eval($(this).text());
+                    });
+                },
+                error: function () {
+                    $('#receipts').html('<div class="alert alert-danger">فشل في تحميل الحركات النقدية.</div>');
+                }
+            });
+        });
+    </script>
 
-            .detail-item h6 {
-                color: var(--secondary-color);
-                font-weight: 600;
-                margin-bottom: 0.5rem;
-                font-size: 0.9rem;
-                text-transform: uppercase;
-            }
-
-            .detail-item p {
-                background-color: #f8f9fa;
-                padding: 0.75rem 1rem;
-                border-radius: 8px;
-                border-right: 3px solid var(--primary-color);
-                margin-bottom: 0;
-            }
-
-        /* Card Styling */
-        .card {
-            border: none;
-            border-radius: 12px;
-        }
-
-        .card-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        /* Button Styling */
-        .btn {
-            border-radius: 8px;
-            padding: 0.625rem 1.25rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-            .btn-primary:hover {
-                background-color: #2980b9;
-                border-color: #2980b9;
-                transform: translateY(-2px);
-            }
-
-        .btn-outline-secondary {
-            border-color: #dee2e6;
-        }
-
-            .btn-outline-secondary:hover {
-                background-color: #f8f9fa;
-            }
-
-        /* Responsive Adjustments */
-        @@media (max-width: 768px) {
-            .d-flex.justify-content-between {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .detail-item {
-                margin-bottom: 1rem;
-            }
-
-            .btn {
-                width: 100%;
-                margin-bottom: 0.5rem;
-            }
-        }
-    </style>
+}

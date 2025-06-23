@@ -1,1 +1,296 @@
-﻿@model Receipt
+﻿@model CreateReceiptViewModel
+@{
+    ViewData["Title"] = "إنشاء حركة نقدية";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title mb-0">@ViewData["Title"]</h3>
+                </div>
+
+                <div class="card-body">
+                    <form id="receiptForm" asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <!-- Header Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">اختر نوع الحساب</label> <br />
+                                <select asp-for="Type" asp-items="Html.GetEnumSelectList<AccountType>()" class="form-select" required>
+                                    <option selected disabled hidden value="">اختر نوع الحساب</option>
+                                </select>
+                                <span asp-validation-for="Type" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="AccountId" class="form-label"></label> <br />
+                                <select asp-for="AccountId" class="form-select">
+                                    <option value="">-- اختر الحساب --</option>
+                                </select>
+                                <span asp-validation-for="AccountId" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="CreatedAt" class="form-label"></label>
+                                <input asp-for="CreatedAt" type="date" class="form-control" />
+                                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <!-- Receipt Rows Section -->
+                        <div class="table-responsive mb-4">
+                            <table class="table table-bordered table-hover" id="receiptTable">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 25%">نوع الحركة</th>
+                                        <th style="width: 25%">القيمة النقدية</th>
+                                        <th style="width: 40%">الوصف</th>
+                                        <th style="width: 10%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="receiptRows">
+                                    @for (int i = 0 ; i < Model.Rows.Count ; i++)
+                                    {
+                                        <partial name="_ReceiptRow" model="@Model" view-data="@ViewData" />
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-end">
+                                            <button type="button" id="addRowBtn" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-plus me-1"></i> إضافة حركة
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-right me-1"></i> رجوع
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> حفظ الحركات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function() {
+            // Handle Account Type selection change
+            $('#Type').change(function() {
+                ChangeAccountsDropDown();
+            });
+            ChangeAccountsDropDown();
+
+            // Add new row
+            $('#addRowBtn').click(function(e) {
+                e.preventDefault();
+                addNewRow();
+            });
+
+            // Remove row
+            $(document).on('click', '.remove-row', function() {
+                if ($('#receiptRows tr').length > 1) {
+                    $(this).closest('tr').remove();
+                    reindexRows();
+                } else {
+                    alert('يجب أن تحتوي الفاتورة على حركة واحدة على الأقل');
+                }
+            });
+
+            // Form submission validation
+            $('#receiptForm').submit(function(e) {
+                // Validate Account Type
+                if ($('#AccountTypesId').val() === '') {
+                    $('#AccountType').text('يجب اختيار نوع الحساب');
+                    e.preventDefault();
+                } else {
+                    $('#AccountType').text('');
+                }
+
+                // Validate all receipt rows
+                var isValid = true;
+                $('#receiptRows tr').each(function(index) {
+                    var $row = $(this);
+                    var $typeSelect = $row.find('select[name$="Type"]');
+                    var $amountInput = $row.find('input[name$="MoneyAmount"]');
+                    var $typeError = $row.find('span[data-valmsg-for$="Type"]');
+                    var $amountError = $row.find('span[data-valmsg-for$="MoneyAmount"]');
+
+                    // Validate Type
+                    if ($typeSelect.val() === '') {
+                        $typeError.text('يجب اختيار نوع الحركة');
+                        isValid = false;
+                    } else {
+                        $typeError.text('');
+                    }
+
+                    // Validate Amount
+                    var amount = parseFloat($amountInput.val()) || 0;
+                    if (amount < 0) {
+                        $amountError.text('يجب أن تكون القيمة أكبر من او تساوي الصفر');
+                        isValid = false;
+                    } else {
+                        $amountError.text('');
+                    }
+                });
+
+                if (!isValid) {
+                    e.preventDefault();
+                }
+            });
+            function ChangeAccountsDropDown() {
+                debugger;
+                var accountTypeId = $('#Type').val();
+                var $accountDropdown = $('#AccountId');
+                var $accountError = $('#Type + .field-validation-valid');
+                debugger;
+                if (accountTypeId === '') {
+                    $accountDropdown.prop('disabled', true);
+                    $accountDropdown.empty().append('<option value="">-- اختر الحساب --</option>');
+                    $accountDropdown.val('');
+                    $accountError.text('يجب اختيار نوع الحساب');
+                } else {
+                    $accountError.text('');
+                    $accountDropdown.prop('disabled', false);
+                    debugger
+                    // Get the appropriate list based on account type
+                    var allItems = @Html.Raw(Json.Serialize(ViewBag.Accounts));
+                            var items = $.grep(allItems, function(item) {
+                    return item.type == accountTypeId;
+                });
+
+                    // Populate the dropdown
+                    $accountDropdown.empty().append('<option value="">-- اختر الحساب --</option>');
+                    $.each(items, function(index, item) {
+                        if(item.id == @Model.AccountId){
+                        $accountDropdown.append($(`<option selected value="${item.id}">${item.name}</option>`));
+
+                        }else{
+                        $accountDropdown.append($(`<option value="${item.id}">${item.name}</option>`));
+                        }
+                    });
+                }
+            }
+            function addNewRow() {
+                var rowCount = $('#receiptRows tr').length;
+                var newRow = $('#receiptRows tr:first').clone();
+
+                // Clear values
+                newRow.find('input').val('');
+                newRow.find('select').val('');
+
+                // Update names and validation attributes
+                newRow.find('[name]').each(function() {
+                    var name = $(this).attr('name')
+                        .replace(/Rows\[\d+\]/g, 'Rows[' + rowCount + ']');
+                    $(this).attr('name', name);
+                });
+
+                newRow.find('[data-valmsg-for]').each(function() {
+                    var forAttr = $(this).attr('data-valmsg-for')
+                        .replace(/Rows\[\d+\]/g, 'Rows[' + rowCount + ']');
+                    $(this).attr('data-valmsg-for', forAttr);
+                });
+
+                $('#receiptRows').append(newRow);
+            }
+
+            function reindexRows() {
+                $('#receiptRows tr').each(function(index) {
+                    $(this).find('[name]').each(function() {
+                        var name = $(this).attr('name')
+                            .replace(/Rows\[\d+\]/g, 'Rows[' + index + ']');
+                        $(this).attr('name', name);
+                    });
+
+                    $(this).find('[data-valmsg-for]').each(function() {
+                        var forAttr = $(this).attr('data-valmsg-for')
+                            .replace(/Rows\[\d+\]/g, 'Rows[' + index + ']');
+                        $(this).attr('data-valmsg-for', forAttr);
+                    });
+                });
+            }
+        });
+    </script>
+}
+
+<style>
+    /* Invoice Styling */
+    .card {
+        border-radius: 0.5rem;
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: none;
+    }
+
+    .form-select, .form-control {
+        border-radius: 0.375rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .table th {
+        font-weight: 600;
+        text-align: right;
+    }
+
+    .btn-outline-primary {
+        border-color: #4e73df;
+        color: #4e73df;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #4e73df;
+        color: white;
+    }
+
+    /* RTL specific adjustments */
+    .form-select {
+        background-position: left 0.75rem center;
+    }
+
+    /* Animation for new rows */
+    @@keyframes fadeIn {
+        from{
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .table tbody tr {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    /* Validation error styling */
+    .input-validation-error {
+        border-color: #dc3545;
+    }
+
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 0.875em;
+    }
+
+    /* Make error messages more visible */
+    .text-danger {
+        font-weight: 500;
+    }
+</style>

@@ -12,19 +12,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<header>
-
-
-        <!-- Navigation -->
+    <header>
         <nav class="navbar navbar-expand-lg navbar-light fixed-top">
             <div class="container">
-
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">سكن</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">الرئيسية</a>
                         </li>
@@ -32,19 +28,18 @@
                             <a class="nav-link" asp-controller="Accounts" asp-action="Index">الحسابات</a>
                         </li>
                         <li class="nav-item">
-                        <a class="nav-link" asp-controller="Receipts" asp-action="Index">الحركات النقدية</a>
+                            <a class="nav-link" asp-controller="Receipts" asp-action="Create">إنشاء حركة نقدية</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Receipts" asp-action="Index">كل الحركات النقدية</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Reports" asp-action="Index">التقارير</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Departments" asp-action="Index">الوحدات</a>
-                        </li>
                     </ul>
-
-                <ul class="navbar-nav me-auto">
+                    <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Account" asp-action="Login">
+                            <a class="nav-link btn btn-outline-primary" asp-controller="Account" asp-action="Login">
                                 <i class="fas fa-sign-in-alt me-1"></i>
                                 تسجيل الدخول
                             </a>
@@ -55,24 +50,22 @@
         </nav>
     </header>
 
-        <main role="main">
-            @RenderBody()
-        </main>
-    
+    <main class="container" style="padding-top: 20px;">
+        @RenderBody()
+    </main>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-md-6">
-                    <p>&copy; 2025 سكن - نظام إدارة المباني. جميع الحقوق محفوظة.</p>
+                    <p class="mb-0">&copy; 2025 سكن - نظام إدارة المباني. جميع الحقوق محفوظة.</p>
                 </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="social-links">
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                <div class="col-md-6">
+                    <div class="social-links d-flex justify-content-md-end">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
             </div>
@@ -82,8 +75,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,44 +1,41 @@
 ﻿@{
     ViewData["Title"] = "نظام إدارة المباني";
 }
-    <title></title>
 
 
-<body>
-    
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="floating-elements"></div>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6">
-                    <div class="hero-content">
-                        <h1 class="hero-title">مرحباً بكم في سكن</h1>
-                        <p class="hero-subtitle">
-                            نظام متكامل لإدارة المباني والسكان بكفاءة عالية وسهولة في الاستخدام.
-                            نوفر لكم حلول ذكية لإدارة العقارات والتواصل مع السكان وتتبع جميع العمليات.
-                        </p>
-                        <div class="d-flex gap-3 flex-wrap">
-                            <a asp-controller="Accounts" asp-action="Index" class="btn btn-custom btn-primary-custom">
-                                <i class="fas fa-building me-2"></i>
-                                استعراض الحسابت
-                            </a>
-                            <a asp-controller="Home" asp-action="About" class="btn btn-custom btn-outline-custom">
-                                <i class="fas fa-info-circle me-2"></i>
-                                المزيد عن النظام
-                            </a>
-                        </div>
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container" style="padding-top: 20px;">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="hero-content">
+                    <h1 class="hero-title">مرحباً بكم في سكن</h1>
+                    <p class="hero-subtitle">
+                        نظام متكامل لإدارة المباني والسكان بكفاءة عالية وسهولة في الاستخدام.
+                        نوفر لكم حلول ذكية لإدارة العقارات والتواصل مع السكان وتتبع جميع العمليات.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a asp-controller="Accounts" asp-action="Index" class="btn btn-custom btn-outline-custom">
+                            <i class="fas fa-building me-2"></i>
+                            استعراض الحسابات
+                        </a>
+                        <a asp-controller="Home" asp-action="About" class="btn btn-custom btn-outline-custom">
+                            <i class="fas fa-info-circle me-2"></i>
+                            المزيد عن النظام
+                        </a>
                     </div>
                 </div>
-
             </div>
+            <!-- Add empty column if you want to add an image later -->
+            <div class="col-lg-6"></div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Statistics Section -->
-    <section class="py-5" style="background: #f8f9fa;">
-        <div class="container">
+<section class="py-5" style="background: #f8f9fa; margin-top: 20px;">
+    <div class="container">
             <div class="row g-4">
                 <div class="col-lg-3 col-md-6">
                     <div class="stats-card text-center">
@@ -245,13 +242,21 @@
     </script>
     }
 
-</body>
 <style>
+    .hero-section {
+        padding-top: 70px; /* Match navbar height */
+        min-height: calc(70vh - 70px); /* Adjust for navbar */
+    }
+
+    /* Add smooth scroll padding for all sections */
+    section {
+        scroll-margin-top: 70px;
+    }
     body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: white; /* Changed from gradient to solid */
     }
     .hero-section {
-        background: linear-gradient(rgba(44, 62, 80, 0.8), rgba(52, 152, 219, 0.8)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff" fill-opacity="0.1" points="0,1000 1000,0 1000,1000"/></svg>');
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 70vh;
         display: flex;
         align-items: center;
@@ -435,16 +440,6 @@
         position: relative;
         overflow: hidden;
     }
-
-    .btn-primary-custom {
-        background: linear-gradient(45deg, var(--secondary-color), var(--success-color));
-        color: white;
-    }
-
-        .btn-primary-custom:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
-        }
 
     .btn-outline-custom {
         border: 2px solid white;

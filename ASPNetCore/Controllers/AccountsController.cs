@@ -1,5 +1,4 @@
-﻿using ASPNetCore.Models;
-using BLL;
+﻿using BLL;
 using DAL.Domain;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ namespace ASPNetCore.Controllers
         public async Task<IActionResult> Index()
         {
             var accounts = await _managers.Accounts.GetAll();
-            return View($"AccountViews/{nameof(Index)}", AccountViewModel.ToAccountViewModel(accounts));
+            return View(accounts);
         }
 
         // GET: Accounts/Details/5
@@ -36,13 +35,13 @@ namespace ASPNetCore.Controllers
                 return NotFound();
             }
 
-            return View($"AccountViews/{nameof(Details)}", new AccountViewModel(account));
+            return View(account);
         }
 
         // GET: Accounts/Create
         public IActionResult Create()
         {
-            return View($"AccountViews/{nameof(Create)}");
+            return View();
         }
 
         // POST: Accounts/Create
@@ -58,7 +57,7 @@ namespace ASPNetCore.Controllers
                 await _managers.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View($"AccountViews/{nameof(Create)}", new AccountViewModel(account));
+            return View(account);
         }
 
         // GET: Accounts/Edit/5
@@ -74,7 +73,7 @@ namespace ASPNetCore.Controllers
             {
                 return NotFound();
             }
-            return View($"AccountViews/{nameof(Edit)}", new AccountViewModel(account));
+            return View(account);
         }
 
         // POST: Accounts/Edit/5
@@ -109,7 +108,7 @@ namespace ASPNetCore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View($"AccountViews/{nameof(Edit)}", new AccountViewModel(account));
+            return View(account);
         }
 
         // GET: Accounts/Delete/5
@@ -127,7 +126,7 @@ namespace ASPNetCore.Controllers
                 return NotFound();
             }
 
-            return View($"AccountViews/{nameof(Delete)}", new AccountViewModel(account));
+            return View(account);
         }
 
         // POST: Accounts/Delete/5

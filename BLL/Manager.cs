@@ -14,7 +14,7 @@ namespace BLL
             _context = context;
             _dbSet = _context.Set<T>();
         }
-        public async Task Add(T entity)
+        public virtual async Task Add(T entity)
         {
             await _dbSet.AddAsync(entity);
         }

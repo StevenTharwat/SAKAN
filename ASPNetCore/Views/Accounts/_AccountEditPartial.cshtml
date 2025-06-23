@@ -1,7 +1,18 @@
-﻿@model AccountViewModel
+﻿@model Account
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 <div class="row g-3">
+    
+    <!-- Type -->
+    <div class="col-md-12">
+        <div class="form-floating">
+            <select asp-for="Type" asp-items="Html.GetEnumSelectList<AccountType>()" class="form-select" placeholder="اختر نوع الحساب" required>
+                <option value="">اختر نوع الحساب</option>
+            </select>
+            <span asp-validation-for="Type" class="text-danger small"></span>
+        </div>
+    </div>
+    
     <!-- Serial Number -->
     <div class="col-md-6">
         <div class="form-floating">
@@ -20,17 +31,15 @@
         </div>
     </div>
 
-    @if (ViewBag.controllerName == "Departments")
-    {
         <!-- Number Of People -->
-        <div class="col-md-12">
+        <div class="col-md-12" style="display:none">
             <div class="form-floating">
                 <input asp-for="NumberOfPeople" class="form-control" placeholder=" " />
                 <label asp-for="NumberOfPeople"></label>
                 <span asp-validation-for="NumberOfPeople" class="text-danger small"></span>
             </div>
         </div>
-    }
+    
 
 
     <!-- Address -->
@@ -79,7 +88,6 @@
         <i class="fas fa-redo me-2"></i>إعادة تعيين
     </button>
 </div>
-
 <style>
     /* Form Styling */
     .form-floating {
@@ -97,14 +105,13 @@
         .form-floating > .form-control:focus ~ label,
         .form-floating > .form-control:not(:placeholder-shown) ~ label,
         .form-floating > .form-select ~ label {
-            transform: scale(0.85) translateY(-0.5rem) translateX(-0.15rem);
+            transform: scale(0.85) translateY(-1.7rem);
             opacity: 0.8;
-            background-color: white;
-            padding: 0 0.5rem;
-            right: 1.5rem;
+            padding:0;
         }
 
     .form-control {
+        margin-top:10px;
         border-radius: 8px;
         padding: 1rem 0.75rem;
         border: 1px solid #ced4da;

@@ -7,7 +7,7 @@ namespace DAL.Data
     public class Context : DbContext
     {
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<Department> Departments { get; set; }
+
         public DbSet<Receipt> Receipts { get; set; }
 
         public Context()

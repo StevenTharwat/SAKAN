@@ -1,14 +1,18 @@
-﻿@model DAL.Domain.Account
+﻿@model Account
 
 @{
-    ViewData["Title"] = "إنشاء حساب جديد";
+    string Discriminator = ArabicWords.AccountDiscriminator;
+    string DiscriminatorAl = ArabicWords.AccountDiscriminatorAl;
+    string DiscriminatorPlural = ArabicWords.AccountDiscriminatorPlural;
+    string DiscriminatorPluralAl = ArabicWords.AccountDiscriminatorPluralAl;
+    ViewData["Title"] = $"إنشاء {Discriminator}";
 }
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="fw-bold text-primary">إنشاء حساب جديد</h2>
-            <p class="text-muted mb-0">أدخل معلومات الحساب الأساسية</p>
+            <h2 class="fw-bold text-primary">إنشاء @Discriminator </h2>
+            <p class="text-muted mb-0">أدخل معلومات @DiscriminatorAl الأساسية</p>
         </div>
         <a asp-action="Index" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-right me-2"></i>العودة للقائمة
@@ -18,10 +22,14 @@
     <div class="card shadow-sm">
         <div class="card-header bg-light py-3">
             <h5 class="card-title mb-0 text-secondary">
-                <i class="fas fa-info-circle me-2"></i>معلومات الحساب
+                <i class="fas fa-info-circle me-2"></i>معلومات @DiscriminatorAl
             </h5>
         </div>
         <div class="card-body">
+
+        <form asp-action="Create">
+            <partial name="_AccountEditPartial" model="@Model" />
+        </form>
 
         </div>
     </div>
@@ -32,27 +40,6 @@
 
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-    <script>
-        // Enable Bootstrap validation
-        (function () {
-            'use strict'
-
-            var forms = document.querySelectorAll('.needs-validation')
-
-            Array.prototype.slice.call(forms)
-                .forEach(function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (!form.checkValidity()) {
-                            event.preventDefault()
-                            event.stopPropagation()
-                        }
-
-                        form.classList.add('was-validated')
-                    }, false)
-                })
-        })()
-    </script>
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_SharedEditScripts" />
 }

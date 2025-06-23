@@ -1,0 +1,42 @@
+﻿<script>
+
+    $(document).ready(function() {
+        // Cache the NumberOfPeople container
+        const $numberOfPeopleContainer = $('div.col-md-12').has('input[id="NumberOfPeople"]');
+
+        // Function to toggle visibility based on selected type
+        function toggleNumberOfPeopleVisibility() {
+            debugger
+            const selectedType = $('#Type').val();
+                if (selectedType === '@((int) AccountType.Department)') {
+                    $numberOfPeopleContainer.css('display', 'block');
+                } else {
+                    $numberOfPeopleContainer.css('display', 'none');
+                }
+        }
+
+        // Initial check on page load
+        toggleNumberOfPeopleVisibility();
+
+        // Bind change event to Type dropdown
+        $('#Type').change(toggleNumberOfPeopleVisibility);
+    });
+    // Enable Bootstrap validation
+    (function () {
+        'use strict'
+
+        var forms = document.querySelectorAll('.needs-validation')
+
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+    })()
+</script>
