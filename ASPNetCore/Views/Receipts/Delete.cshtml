@@ -1,0 +1,58 @@
+﻿@model Receipt
+
+@{
+    ViewData["Title"] = "حذف الحركة النقدية";
+}
+
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>تأكيد الحذف
+                    </h4>
+                </div>
+
+                <div class="card-body">
+                    <h5 class="text-danger mb-4">هل أنت متأكد أنك تريد حذف هذه الحركة النقدية؟</h5>
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle me-2"></i>هذا الإجراء لا يمكن التراجع عنه. سيتم حذف الحركة بشكل دائم.
+                    </div>
+
+                    <partial name="_ReceiptDetails" model="@Model" />
+
+                    <form asp-action="Delete" class="mt-4">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> رجوع
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-1"></i> تأكيد الحذف
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <style>
+        .card {
+            border-radius: 10px;
+        }
+
+        .card-header {
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .alert {
+            border-left: 4px solid #ffc107;
+        }
+    </style>

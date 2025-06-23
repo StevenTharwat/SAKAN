@@ -1,0 +1,116 @@
+﻿@model DAL.Domain.Receipt
+
+@{
+    ViewData["Title"] = "تعديل الحركة النقدية";
+}
+
+<div class="container-fluid py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-edit me-2"></i>تعديل الحركة النقدية
+                    </h4>
+                </div>
+
+                <form asp-controller="Receipts" asp-action="Edit" class="card-body">
+                    <input type="hidden" asp-for="Id" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <div class="row mb-4">
+
+                        <div hidden class="form-group mb-3">
+                            <input asp-for="AccountId" class="form-control" />
+                            <span asp-validation-for="AccountId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="Type" class="form-label"></label>
+                            <select asp-for="Type" asp-items="Html.GetEnumSelectList<ReceiptType>()" class="form-select">
+                                <option value="">-- اختر النوع --</option>
+                            </select>
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 form-group mb-3">
+                            <label asp-for="MoneyAmount" class="form-label"></label>
+                            <input asp-for="MoneyAmount" class="form-control" />
+                            <span asp-validation-for="MoneyAmount" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-12 form-group mb-3">
+                            <label asp-for="CreatedAt" class="form-label"></label>
+                            <input asp-for="CreatedAt" type="date" class="form-control" />
+                            <span asp-validation-for="CreatedAt" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-12 form-group mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-light d-flex justify-content-between">
+                        <a asp-controller="Receipts" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">
+                            <i class="fas fa-times me-1"></i> إلغاء
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> حفظ التعديلات
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function() {
+            // Format amount field as currency
+            $('#Amount').on('blur', function() {
+                let value = parseFloat($(this).val()).toFixed(2);
+                $(this).val(value);
+            });
+
+            // Initialize select2 if needed
+            $('.form-select').select2({
+                theme: 'bootstrap-5',
+                placeholder: "اختر...",
+                allowClear: true
+            });
+        });
+    </script>
+
+    <style>
+        .card {
+            border-radius: 10px;
+        }
+
+        .card-header {
+            border-top-left-radius: 10px !important;
+            border-top-right-radius: 10px !important;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+        }
+    </style>
+}

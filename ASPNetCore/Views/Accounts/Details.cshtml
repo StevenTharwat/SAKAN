@@ -21,146 +21,42 @@
     }
     ViewBag.DiscriminatorPlura = DiscriminatorPlural;
     ViewData["Title"] = $"تفاصيل {DiscriminatorAl}";
+    IEnumerable<Receipt>? Receipts = ViewBag?.receipts;
 }
 
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">تفاصيل الحساب</h4>
-                        <div>
-                            <a asp-action="Edit" asp-route-id="@Model.SerialNumber" class="btn btn-light btn-sm me-2">
-                                <i class="fas fa-edit"></i> تعديل
-                            </a>
-                            <a asp-action="Index" class="btn btn-light btn-sm">
-                                <i class="fas fa-arrow-right"></i> العودة للقائمة
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <dl class="row">
-                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.SerialNumber)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(model => model.SerialNumber)</dd>
-
-                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Type)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Type)</dd>
-
-                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Name)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(model => model.Name)</dd>
-
-                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.CreatedAt)</dt>
-                                <dd class="col-sm-8">@Model.CreatedAt.ToString("dd/MM/yyyy - hh:mm")</dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-6">
-                            <dl class="row">
-                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Credit)</dt>
-                                <dd class="col-sm-8">@Model.Credit.ToString("N2")</dd>
-
-                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Debit)</dt>
-                                <dd class="col-sm-8">@Model.Debit.ToString("N2")</dd>
-                                
-                                <dt class="col-sm-4">الصافي</dt>
-                                <dd class="col-sm-8">@(( Model.Credit - Model.Debit ).ToString("N2"))</dd>
-
-                                <dt class="col-sm-4">@Html.DisplayNameFor(model => model.NumberOfPeople)</dt>
-                                <dd class="col-sm-8">@Html.DisplayFor(model => model.NumberOfPeople)</dd>
-                            </dl>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-12">
-                            <h5 class="border-bottom pb-2">معلومات إضافية</h5>
-                            <dl class="row">
-                                @if (!string.IsNullOrEmpty(Model.Address))
-                                {
-                                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Address)</dt>
-                                    <dd class="col-sm-10">@Html.DisplayFor(model => model.Address)</dd>
-                                }
-
-                                @if (!string.IsNullOrEmpty(Model.Description))
-                                {
-                                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.Description)</dt>
-                                    <dd class="col-sm-10">@Html.DisplayFor(model => model.Description)</dd>
-                                }
-
-                                @if (!string.IsNullOrEmpty(Model.AdditionalInfo))
-                                {
-                                    <dt class="col-sm-2">@Html.DisplayNameFor(model => model.AdditionalInfo)</dt>
-                                    <dd class="col-sm-10">@Html.DisplayFor(model => model.AdditionalInfo)</dd>
-                                }
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    
+        <partial name="_AccountDetails" model="@Model" />
+    <div id="receipts">
+        <partial name="~/Views/Receipts/Index.cshtml" model="@Receipts" />
     </div>
-    <div id="receipts"></div>
 
 </div>
-
-<style>
-    /* Details page specific styles */
-    .card {
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .card-header {
-        font-family: 'Cairo', sans-serif;
-        font-weight: 700;
-    }
-
-    dl.row dt {
-        font-weight: 600;
-        color: #555;
-    }
-
-    dl.row dd {
-        margin-bottom: 0.5rem;
-    }
-
-    .table {
-        margin-bottom: 0;
-    }
-
-        .table th {
-            font-weight: 600;
-            /* background-color: #f8f9fa; */
-        }
-
-    .table-responsive {
-        border-radius: 5px;
-        overflow: hidden;
-    }
-</style>
-@section Scripts{
-    <script>
-        $(document).ready(function () {
-            // Load receipts dynamically
-            $.ajax({
-                url: '@Url.Action("Index", "Receipts")',
-                type: 'GET',
-                data: { accountId: '@Model.Id' },
-                success: function (data) {
-                    $('#receipts').html(data);
-                    // Execute any scripts in the loaded content
-                    $('#receipts script').each(function() {
-                        eval($(this).text());
-                    });
-                },
-                error: function () {
-                    $('#receipts').html('<div class="alert alert-danger">فشل في تحميل الحركات النقدية.</div>');
-                }
-            });
-        });
-    </script>
-
+@section Scripts {
+    <partial name="~/Views/Receipts/_IndexFilterJs.cshtml" />
 }
+
+@* @section Scripts{ *@
+@*     <script> *@
+@*         $(document).ready(function () { *@
+@*             // Load receipts dynamically *@
+@*             $.ajax({ *@
+@*                 url: '@Url.Action("Index", "Receipts")', *@
+@*                 type: 'GET', *@
+@*                 data: { accountId: '@Model.Id' }, *@
+@*                 success: function (data) { *@
+@*                     $('#receipts').html(data); *@
+@* debugger *@
+@*                     // Execute any scripts in the loaded content *@
+@*                     $('#receipts script').each(function() { *@
+@*                         eval($(this).text()); *@
+@*                     }); *@
+@*                 }, *@
+@*                 error: function () { *@
+@*                     $('#receipts').html('<div class="alert alert-danger">فشل في تحميل الحركات النقدية.</div>'); *@
+@*                 } *@
+@*             }); *@
+@*         }); *@
+@*     </script> *@
+
+@* } *@

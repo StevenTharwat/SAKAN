@@ -28,8 +28,12 @@ namespace DAL.Domain
         [Required(ErrorMessage = ErrorMessages.RequiredMessage)]
         [Display(Name = "الحساب")]
         public int AccountId { get; set; }
-        public Account Account { get; set; }
+        public Account? Account { get; set; }
         public bool IsDeleted { get; set; }
+        public Receipt()
+        {
+
+        }
 
         public Receipt(ReceiptType type, double moneyAmount, DateTime createdAt, string? description = null)
         {

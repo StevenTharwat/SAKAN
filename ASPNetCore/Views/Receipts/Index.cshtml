@@ -25,17 +25,16 @@
                 <div class="card-body">
                     <!-- Filter Section -->
                     <div class="row mb-3">
-                        @if (ViewBag?.AccountId == null)
-                        {
-                            <div class="col-md-@col">
-                                <div class="form-group">
-                                    <label class="form-label">نوع الحساب</label>
-                                    <select id="accountTypeFilter" class="form-select" asp-items="Html.GetEnumSelectList<AccountType>()">
-                                        <option value="">الكل</option>
-                                    </select>
-                                </div>
+                        
+                        <div @(ViewBag?.AccountId==null?"":"hidden") class="col-md-@col">
+                            <div class="form-group">
+                                <label class="form-label">نوع الحساب</label>
+                                <select id="accountTypeFilter" class="form-select" asp-items="Html.GetEnumSelectList<AccountType>()">
+                                    <option value="">الكل</option>
+                                </select>
                             </div>
-                        }
+                        </div>
+                        
                         <div class="col-md-@col">
                             <div class="form-group">
                                 <label class="form-label">نوع الحركة</label>
@@ -103,17 +102,15 @@
                                         </td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
-                                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                                <a asp-controller="Receipts" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                                <a asp-controller="Receipts" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
                                                     <i class="fas fa-edit"></i>
                                                 </a>
-                                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline">
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('هل أنت متأكد من حذف هذه الحركة؟');">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                <a asp-controller="Receipts" asp-action="Delete" asp-route-id="@item.Id" method="post" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>
@@ -135,65 +132,7 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function() {
-            // Filter functionality
-            $('#receiptTypeFilter, #accountTypeFilter, #fromDate, #toDate').change(function() {
-                filterReceipts();
-            });
-
-            function filterReceipts() {
-                const receiptTypeFilter = $('#receiptTypeFilter').val().toLowerCase();
-                const accountTypeFilter = $('#accountTypeFilter').val().toLowerCase();
-                const fromDate = $('#fromDate').val();
-                const toDate = $('#toDate').val();
-
-                $('#receiptsTable tbody tr').each(function() {
-                    const row = $(this);
-                    const accountRowType = row.find('td:nth-child(1)').text().trim().toLowerCase();
-                    const receiptRowType = row.find('td:nth-child(3)').text().trim().toLowerCase();
-                    const rowDate = row.find('td:nth-child(6)').text().trim();
-
-                    debugger
-                    let typeMatch = 
-                        (accountTypeFilter === accountRowType && receiptRowType === receiptTypeFilter) ||
-                        (accountTypeFilter === '' && receiptRowType === receiptTypeFilter) ||
-                        (accountTypeFilter === accountRowType && receiptTypeFilter === '') ||
-                        (accountTypeFilter === '' && receiptTypeFilter === '');
-
-                    let dateMatch = true;
-                    if (fromDate) {
-                        const fromDateObj = new Date(fromDate);
-                        const rowDateObj = new Date(rowDate.replace(/\//g, '-'));
-                        dateMatch = dateMatch && rowDateObj >= fromDateObj;
-                    }
-                    if (toDate) {
-                        const toDateObj = new Date(toDate);
-                        const rowDateObj = new Date(rowDate.replace(/\//g, '-'));
-                        dateMatch = dateMatch && rowDateObj <= toDateObj;
-                    }
-
-                    if (typeMatch && dateMatch) {
-                        row.show();
-                    } else {
-                        row.hide();
-                    }
-                });
-
-                // Update showing count
-                const showing = $('#receiptsTable tbody tr:visible').length;
-                $('#showingCount').text(showing);
-            }
-
-            // Initialize date inputs with default range (last month)
-            const today = new Date();
-            const lastMonth = new Date();
-            lastMonth.setMonth(today.getMonth() - 1);
-
-            $('#fromDate').val(lastMonth.toISOString().split('T')[0]);
-            $('#toDate').val(today.toISOString().split('T')[0]);
-        });
-    </script>
+    <partial name="_IndexFilterJs" />
 }
 
 

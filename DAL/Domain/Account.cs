@@ -87,20 +87,31 @@ namespace DAL.Domain
         public virtual double UpdateRecipt(Receipt receipt)
         {
             if (receipt == null) throw new Exception("Receipt is null");
-            DeleteRecipt(receipt);
+            DeleteRecipt(receipt.Id);
             AddRecipt(receipt);
             return GetBalance();
         }
-        public virtual double DeleteRecipt(Receipt receipt)
+        public virtual double DeleteRecipt(int id)
         {
+            var receipt = Receipts.Where(r => r.Id == id).FirstOrDefault();
             if (receipt == null) throw new Exception("Receipt is null");
             if (receipt.Type == ReceiptType.CashReceipt)
             {
                 Credit -= receipt.MoneyAmount;
+                if (Credit < 0)
+                {
+                    Debit += Math.Abs(Credit);
+                    Credit = 0;
+                }
             }
             else if (receipt.Type == ReceiptType.PaymentReceipt)
             {
                 Debit -= receipt.MoneyAmount;
+                if (Debit < 0)
+                {
+                    Credit += Math.Abs(Debit);
+                    Debit = 0;
+                }
             }
             else
             {

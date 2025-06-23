@@ -14,17 +14,17 @@ namespace BLL
             _context = context;
             _dbSet = _context.Set<T>();
         }
-        public virtual async Task Add(T entity)
+        public virtual async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
         }
 
-        public async Task AddRange(IEnumerable<T> entitie)
+        public async Task AddRangeAsync(IEnumerable<T> entitie)
         {
             await _dbSet.AddRangeAsync(entitie);
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             // Soft delete implementation
             if (entity is ISoftDelete softDeleteEntity)
@@ -38,7 +38,7 @@ namespace BLL
             }
         }
 
-        public async Task<T?> Get(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = true)
+        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null, bool tracked = true)
         {
             IQueryable<T> query;
             if (tracked)
@@ -65,7 +65,7 @@ namespace BLL
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -91,14 +91,14 @@ namespace BLL
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetById(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public virtual async Task Update(int id, T entity)
+        public virtual async Task UpdateAsync(int id, T entity)
         {
-            T? oldItem = await GetById(id);
+            T? oldItem = await GetByIdAsync(id);
             if (oldItem == null) return;
             var entry = _context.Entry<T>(oldItem);
             entry.CurrentValues.SetValues(entity);

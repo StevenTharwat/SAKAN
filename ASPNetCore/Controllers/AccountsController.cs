@@ -17,7 +17,7 @@ namespace ASPNetCore.Controllers
         // GET: Accounts
         public async Task<IActionResult> Index()
         {
-            var accounts = await _managers.Accounts.GetAll();
+            var accounts = await _managers.Accounts.GetAllAsync();
             return View(accounts);
         }
 
@@ -29,11 +29,14 @@ namespace ASPNetCore.Controllers
                 return NotFound();
             }
 
-            var account = await _managers.Accounts.Get(m => m.Id == id);
+            var account = await _managers.Accounts.GetAsync(m => m.Id == id);
             if (account == null)
             {
                 return NotFound();
             }
+            var receipts = await _managers.Receipts.GetAllAsync(r => r.AccountId == id.Value);
+            ViewBag.AccountId = id.Value;
+            ViewBag.receipts = receipts;
 
             return View(account);
         }
@@ -53,7 +56,7 @@ namespace ASPNetCore.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _managers.Accounts.Add(account);
+                await _managers.Accounts.AddAsync(account);
                 await _managers.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -68,7 +71,7 @@ namespace ASPNetCore.Controllers
                 return NotFound();
             }
 
-            var account = await _managers.Accounts.GetById((int) id);
+            var account = await _managers.Accounts.GetByIdAsync((int) id);
             if (account == null)
             {
                 return NotFound();
@@ -92,7 +95,7 @@ namespace ASPNetCore.Controllers
             {
                 try
                 {
-                    await _managers.Accounts.Update(id, account);
+                    await _managers.Accounts.UpdateAsync(id, account);
                     await _managers.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -120,7 +123,7 @@ namespace ASPNetCore.Controllers
             }
 
             var account = await _managers.Accounts
-                .Get(m => m.Id == id);
+                .GetAsync(m => m.Id == id);
             if (account == null)
             {
                 return NotFound();
@@ -134,7 +137,7 @@ namespace ASPNetCore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var account = await _managers.Accounts.GetById(id);
+            var account = await _managers.Accounts.GetByIdAsync(id);
             if (account != null)
             {
                 _managers.Accounts.Delete(account);
@@ -146,7 +149,7 @@ namespace ASPNetCore.Controllers
 
         private async Task<bool> AccountExists(int id)
         {
-            var accounts = await _managers.Accounts.GetAll(a => a.Id == id);
+            var accounts = await _managers.Accounts.GetAllAsync(a => a.Id == id);
             return accounts.Count() > 0;
         }
     }

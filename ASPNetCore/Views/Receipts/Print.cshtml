@@ -1,0 +1,140 @@
+﻿@model DAL.Domain.Receipt
+@{
+    Layout = null;
+    ViewData["Title"] = "طباعة إيصال " + Model.Id;
+}
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <title>@ViewData["Title"]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+            text-align: right;
+            padding: 20px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+            .receipt-table td {
+                padding: 8px;
+                border-bottom: 1px solid #eee;
+            }
+
+        .signature {
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        @@media print {
+            @@page {
+                size: A5;
+                margin: 10mm;
+            }
+
+            body {
+                padding: 10mm;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2 class="receipt-header">إيصال حركة نقدية</h2>
+
+    <table class="receipt-table">
+        <tr>
+            <td><strong>رقم الحركة:</strong></td>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <td><strong>نوع الحركة:</strong></td>
+            <td>
+                @if (Model.Type == DAL.Domain.ReceiptType.CashReceipt)
+                {
+                    <span>حركة تحصيل</span>
+                }
+                else
+                {
+                    <span>حركة دفع</span>
+                }
+            </td>
+        </tr>
+        <tr>
+            <td><strong>المبلغ:</strong></td>
+            <td>@Model.MoneyAmount.ToString("N2") ج.م</td>
+        </tr>
+        <tr>
+            <td><strong>الحساب:</strong></td>
+            <td>@Model.Account?.Name</td>
+        </tr>
+        <tr>
+            <td><strong>التاريخ:</strong></td>
+            <td>@Model.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
+        </tr>
+        <tr>
+            <td><strong>الوصف:</strong></td>
+            <td>@(string.IsNullOrEmpty(Model.Description) ? "لا يوجد وصف" : Model.Description)</td>
+        </tr>
+    </table>
+
+    <div class="signature">
+        <p style="border-top: 1px solid #000; padding-top: 10px; width: 200px; margin-right: auto;">
+            التوقيع: ________________
+        </p>
+    </div>
+
+    <div class="footer">
+        @DateTime.Now.ToString("yyyy/MM/dd") - نظام سكن للإدارة
+    </div>
+
+    <div class="no-print" style="text-align: center; margin-top: 20px;">
+        <button onclick="window.print()" class="btn btn-primary">طباعة</button>
+        <button onclick="window.close()" class="btn btn-secondary">إغلاق</button>
+    </div>
+
+    <script>
+        window.onload = function() {
+            // Auto-print and then close
+            setTimeout(function() {
+                window.print();
+
+                // Close after printing (works in most browsers)
+                setTimeout(function() {
+                    window.close();
+                }, 500);
+            }, 200);
+        };
+
+        // Handle cases where window.close() doesn't work
+        window.onafterprint = function() {
+            setTimeout(function() {
+                window.close();
+            }, 300);
+        };
+    </script>
+</body>
+</html>

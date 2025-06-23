@@ -10,5 +10,14 @@ namespace BLL
         {
             _context = context;
         }
+        public override void Delete(Account entity)
+        {
+            var receipts = _context.Receipts.Where(r => r.AccountId == entity.Id).ToList();
+            foreach (var receipt in receipts)
+            {
+                receipt.IsDeleted = true;
+            }
+            base.Delete(entity);
+        }
     }
 }

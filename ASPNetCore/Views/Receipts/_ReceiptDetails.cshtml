@@ -1,0 +1,93 @@
+﻿@model DAL.Domain.Receipt
+
+
+<div class="card-header bg-primary text-white py-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="mb-0">
+            <i class="fas fa-receipt me-2"></i> تفاصيل الحركة النقدية
+        </h4>
+        <div>
+            <a asp-action="Index" class="btn btn-outline-light btn-sm">
+                <i class="fas fa-arrow-right me-1"></i> العودة للقائمة
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card-body">
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="form-group">
+                <label class="form-label text-muted small">@Html.DisplayNameFor(model => model.Type)</label>
+                <div class="form-control-plaintext">
+                    @if (Model.Type == DAL.Domain.ReceiptType.CashReceipt)
+                    {
+                        <span class="badge bg-success">
+                            <i class="fas fa-money-bill-wave me-1"></i>
+                            @Html.DisplayFor(model => model.Type)
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">
+                            <i class="fas fa-hand-holding-usd me-1"></i>
+                            @Html.DisplayFor(model => model.Type)
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="form-group">
+                <label class="form-label text-muted small">@Html.DisplayNameFor(model => model.MoneyAmount)</label>
+                <div class="form-control-plaintext fw-bold">
+                    @Html.DisplayFor(model => model.MoneyAmount) <span class="text-muted"> ج.م</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="form-group">
+                <label class="form-label text-muted small">الحساب</label>
+                <div class="form-control-plaintext">
+                    @if (Model.Account != null)
+                    {
+                        <a asp-controller="Accounts" asp-action="Details" asp-route-id="@Model.AccountId" class="text-decoration-none d-block mt-1">
+                            <i class="fas fa-user-circle"></i>
+                            @Model.Account.Name
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="form-group">
+                <label class="form-label text-muted small">@Html.DisplayNameFor(model => model.CreatedAt)</label>
+                <div class="form-control-plaintext">
+                    <i class="far fa-calendar-alt me-1"></i>
+                    @Model.CreatedAt.ToString("yyyy/MM/dd hh:mm")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="form-group">
+            <label class="form-label text-muted small">@Html.DisplayNameFor(model => model.Description)</label>
+            <div class="form-control-plaintext bg-light p-3 rounded">
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    @Model.Description
+                }
+                else
+                {
+                    <span class="text-muted">لا يوجد وصف</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>

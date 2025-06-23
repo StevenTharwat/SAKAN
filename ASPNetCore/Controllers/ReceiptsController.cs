@@ -1,5 +1,6 @@
 ﻿using ASPNetCore.Models;
 using BLL;
+using DAL.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ASPNetCore.Controllers
@@ -16,7 +17,7 @@ namespace ASPNetCore.Controllers
         [HttpGet]
         public async Task<IActionResult> Create(CreateReceiptViewModel? errorModel = null, int AccountId = -1)
         {
-            var accounts = await _managers.Accounts.GetAll();
+            var accounts = await _managers.Accounts.GetAllAsync();
             ViewBag.Accounts = accounts; // Populate accounts dropdown
 
             if (errorModel?.Rows.Count > 0) //if errorModel != null
@@ -46,7 +47,7 @@ namespace ASPNetCore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ConfirmCreate(CreateReceiptViewModel model)
         {
-            var account = await _managers.Accounts.GetById(model.AccountId);
+            var account = await _managers.Accounts.GetByIdAsync(model.AccountId);
             if (account == null)
             {
                 ModelState.AddModelError("AccountId", "الحساب المحدد غير موجود.");
@@ -76,7 +77,7 @@ namespace ASPNetCore.Controllers
                     account.AddRecipt(receipt);
                 }
 
-                await _managers.Accounts.Update(account.Id, account);
+                await _managers.Accounts.UpdateAsync(account.Id, account);
                 await _managers.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -87,7 +88,7 @@ namespace ASPNetCore.Controllers
         // GET: Receipts
         public async Task<IActionResult> Index(int? accountId = null)
         {
-            var receipts = await _managers.Receipts.GetAll(includeProperties: "Account");
+            var receipts = await _managers.Receipts.GetAllAsync(includeProperties: "Account");
             if (accountId != null)
             {
                 receipts = receipts.Where(r => r.AccountId == accountId);
@@ -96,141 +97,153 @@ namespace ASPNetCore.Controllers
             return View(receipts);
         }
 
-        //public IActionResult AddRow([FromBody] CreateReceiptViewModel model)
-        //{
-        //    model.Rows.Add(new ReceiptRowViewModel());
-        //    return PartialView("_ReceiptRow", model);
-        //}
+        // GET: Receipts/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var Receipt = await _managers.Receipts.GetAsync(includeProperties: "Account", filter: m => m.Id == id.Value);
+            if (Receipt == null)
+            {
+                return NotFound();
+            }
+
+            return View(Receipt);
+        }
+
+        public async Task<ActionResult> Print(int? id)
+        {
+            var Receipt = await _managers.Receipts.GetAsync(includeProperties: "Account", filter: m => m.Id == id.Value);
 
 
-        // // GET: Receipts/Details/5
-        // public async Task<IActionResult> Details(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
+            if (Receipt == null)
+            {
+                return NotFound();
+            }
 
-        //     var Receipt = await _managers.Receipts.Get(m => m.Id == id);
-        //     if (Receipt == null)
-        //     {
-        //         return NotFound();
-        //     }
+            return View(Receipt);
+        }
 
-        //     return View(Receipt);
-        // }
+        // GET: Receipts/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        // // GET: Receipts/Create
-        // public IActionResult Create()
-        // {
-        //     return View();
-        // }
+            var Receipt = await _managers.Receipts.GetByIdAsync((int) id);
+            if (Receipt == null)
+            {
+                return NotFound();
+            }
+            return View(Receipt);
+        }
 
-        // //POST: Receipts/Create
-        // //To protect from overposting attacks, enable the specific properties you want to bind to.
-        // //For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: Receipts/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Receipt Receipt)
+        {
+            if (id != Receipt.Id)
+            {
+                return NotFound();
+            }
 
-        //[HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Create(Receipt Receipt)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         await _managers.Receipts.Add(Receipt);
-        //         await _managers.SaveChangesAsync();
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     return View(Receipt);
-        // }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _managers.Receipts.UpdateAsync(id, Receipt);
+                    await _managers.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    if (!( await ReceiptExists(Receipt.Id) ))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(Receipt);
+        }
 
-        // // GET: Receipts/Edit/5
-        // public async Task<IActionResult> Edit(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
+        // GET: Receipts/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        //     var Receipt = await _managers.Receipts.GetById((int) id);
-        //     if (Receipt == null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     return View(Receipt);
-        // }
+            var Receipt = await _managers.Receipts.GetAsync(includeProperties: "Account", filter: m => m.Id == id.Value);
 
-        // // POST: Receipts/Edit/5
-        // // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> Edit(int id, Receipt Receipt)
-        // {
-        //     if (id != Receipt.Id)
-        //     {
-        //         return NotFound();
-        //     }
+            if (Receipt == null)
+            {
+                return NotFound();
+            }
 
-        //     if (ModelState.IsValid)
-        //     {
-        //         try
-        //         {
-        //             await _managers.Receipts.Update(id, Receipt);
-        //             await _managers.SaveChangesAsync();
-        //         }
-        //         catch (DbUpdateConcurrencyException)
-        //         {
-        //             if (!( await ReceiptExists(Receipt.Id) ))
-        //             {
-        //                 return NotFound();
-        //             }
-        //             else
-        //             {
-        //                 throw;
-        //             }
-        //         }
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     return View(Receipt);
-        // }
+            return View(Receipt);
+        }
 
-        // // GET: Receipts/Delete/5
-        // public async Task<IActionResult> Delete(int? id)
-        // {
-        //     if (id == null)
-        //     {
-        //         return NotFound();
-        //     }
+        // POST: Receipts/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var Receipt = await _managers.Receipts.GetByIdAsync(id);
+            if (Receipt != null)
+            {
+                await _managers.Receipts.DeleteAsync(Receipt);
+            }
 
-        //     var Receipt = await _managers.Receipts
-        //         .Get(m => m.Id == id);
-        //     if (Receipt == null)
-        //     {
-        //         return NotFound();
-        //     }
+            await _managers.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
-        //     return View(Receipt);
-        // }
-
-        // // POST: Receipts/Delete/5
-        // [HttpPost, ActionName("Delete")]
-        // [ValidateAntiForgeryToken]
-        // public async Task<IActionResult> DeleteConfirmed(int id)
-        // {
-        //     var Receipt = await _managers.Receipts.GetById(id);
-        //     if (Receipt != null)
-        //     {
-        //         _managers.Receipts.Delete(Receipt);
-        //     }
-
-        //     await _managers.SaveChangesAsync();
-        //     return RedirectToAction(nameof(Index));
-        // }
-
-        // private async Task<bool> ReceiptExists(int id)
-        // {
-        //     var Receipts = await _managers.Receipts.GetAll(a => a.Id == id);
-        //     return Receipts.Count() > 0;
-        // }
+        private async Task<bool> ReceiptExists(int id)
+        {
+            var Receipts = await _managers.Receipts.GetAllAsync(a => a.Id == id);
+            return Receipts.Count() > 0;
+        }
     }
 }
+
+
+//public IActionResult AddRow([FromBody] CreateReceiptViewModel model)
+//{
+//    model.Rows.AddAsync(new ReceiptRowViewModel());
+//    return PartialView("_ReceiptRow", model);
+//}
+// // GET: Receipts/Create
+// public IActionResult Create()
+// {
+//     return View();
+// }
+
+// //POST: Receipts/Create
+// //To protect from overposting attacks, enable the specific properties you want to bind to.
+// //For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
+//[HttpPost]
+// [ValidateAntiForgeryToken]
+// public async Task<IActionResult> Create(Receipt Receipt)
+// {
+//     if (ModelState.IsValid)
+//     {
+//         await _managers.Receipts.AddAsync(Receipt);
+//         await _managers.SaveChangesAsync();
+//         return RedirectToAction(nameof(Index));
+//     }
+//     return View(Receipt);
+// }
